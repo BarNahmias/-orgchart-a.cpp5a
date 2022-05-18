@@ -4,17 +4,33 @@
 
 #ifndef ORGCHART_A_MAIN_NODE_H
 #define ORGCHART_A_MAIN_NODE_H
-#pragma once
+#include <iostream>
+#include <vector>
+
+using std::string;
+using std::vector;
+using std::invalid_argument;
+using std::ostream;
 
 namespace ariel
-{
-    template <typename T>
-    struct Node
     {
-        T data;
-        Node *right, *left;
-        Node() : data(nullptr), right(nullptr), left(nullptr) {}
-        Node(T data) : data(data), right(nullptr), left(nullptr) {}
-    };
-}
+        class Node{
+        private:
+            string data;
+            Node * parent;
+            vector<Node*> children;
+
+        public:
+
+            Node() : data(nullptr), parent(nullptr){}
+            string get_data(){
+                return data;
+            }
+            friend ostream &operator << ( ostream &output, const Node &n){
+                return  output << "node";
+            }
+
+        };
+    }
+
 #endif //ORGCHART_A_MAIN_NODE_H

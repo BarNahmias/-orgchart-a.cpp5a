@@ -5,157 +5,85 @@
 #ifndef ORGCHART_A_MAIN_ORGCHART_H
 #define ORGCHART_A_MAIN_ORGCHART_H
 
-#pragma once
 #include <iostream>
-#include <unordered_map>
+#include <vector>
+#include "Node.hpp"
 #include <queue>
 #include <deque>
 #include <stack>
-#include "Node.hpp"
-#include "Iterators.hpp"
+using std::string;
+using std::vector;
+using std::invalid_argument;
+using std::ostream;
+namespace ariel
+{
+    class Iterator;
+    class Iterator{
 
-using namespace std;
-namespace ariel {
-    template <typename T>
-    class OrgChart {
-//
-//    private:
-//        Node<T> *root;
+    protected:
+        Node* curr;
+        std::queue<Node*>nodes_order;
 
     public:
-        Node<T> *root;
+        Iterator(){};
 
-        OrgChart():root(nullptr){}
 
-        OrgChart(const OrgChart &oc) //copy constructor
-        {
-            if (oc.root != nullptr)
-            {
-                root = nullptr;
-                add_root(oc.root->data);
-                copy_nodes(oc.root);
-            }
+//        operators
+        Node operator*(){
+            return Node();
         }
 
-        ~OrgChart() {
-            delete_tree(this->root);
-        }
-
-        void delete_nodes(Node<T> *node)
-        {
-            if (node != nullptr)
-            {
-                while (node->left != nullptr || node->right != nullptr)
-                {
-                    if (node->right != nullptr)
-                    {
-                        delete_nodes(node->right);
-                        node->right = nullptr;
-                    }
-                    if (node->left != nullptr)
-                    {
-                        delete_nodes(node->left);
-                        node->left = nullptr;
-                    }
-                }
-
-                if (node->left == nullptr && node->right == nullptr)
-                {
-                    delete (node);
-                }
-            }
-        }
-
-        void change_data(Node<T> *node, T new_data)
-        {
-            node->data = new_data;
-        }
-
-        Node* find_node(Node* node,T data) {
-            if (node != nullptr)
-            {
-                if (node->data == data)
-                {
-                    return node;
-                }
-                if (node->left != nullptr && node->right != nullptr)
-                {
-                    Node<T> *temp = find_node(node->left, data);
-                    if (temp == nullptr)
-                    {
-                        return find_node(node->right, data);
-                    }
-                    return temp;
-                }
-                if (node->left == nullptr && node->right != nullptr)
-                {
-                    return find_node(node->right, data);
-                }
-                if (node->left != nullptr && node->right == nullptr)
-                {
-                    return find_node(node->left, data);
-                }
-            }
-            return nullptr;
-        }
-
-
-        OrgChart<T> & add_root(T data)  {
-            if (root == nullptr)
-            {
-                root = new Node<T>(data);
-                return *this;
-            }
-            change_data(root, data);
+        Iterator operator++(){
             return *this;
         }
+        string* operator->() const{
+            return nullptr;
+        }
+        bool operator == (const Iterator &it)const{
+            return false;
+        }
+        bool operator != (const Iterator &it)const{
+            return false;
+        }
+
+
+    };
+
+    class OrgChart
+    {
+
+    private:
+        Node  *root;
+
+    public:
+
+        OrgChart():root(nullptr){}
+        ~OrgChart(){}
+
+
+        OrgChart add_root(string root);
+        OrgChart add_sub(string a, string b );
+
+//        iterators begin and end
+
+        friend ostream &operator << ( ostream &output, const OrgChart &oc);
+
+        Iterator begin_level_order();
+        Iterator end_level_order();
+
+        Iterator begin_reverse_order();
+        Iterator reverse_order();
+
+        Iterator begin_preorder();
+        Iterator end_preorder();
+
+        Iterator begin();
+        Iterator end();
 
 
 
+    };
 
-        OrgChart<T>& add_sub(T data,T data) {  }
-
-
-
-
-
-        public:
-            iterator<T> begin_preorder()
-            {
-                return iterator<T>{order::pre, root};
-            }
-            iterator<T> end_preorder()
-            {
-                return iterator<T>{order::pre};
-            }
-
-            iterator<T> begin_inorder()
-            {
-                return iterator<T>{order::in, root};
-            }
-            iterator<T> end_inorder()
-            {
-                return iterator<T>{order::in};
-            }
-
-            iterator<T> begin_postorder()
-            {
-                return iterator<T>{order::post, root};
-            }
-            iterator<T> end_postorder()
-            {
-                return iterator<T>{order::post};
-            }
-
-            iterator<T> begin()
-            {
-                return begin_inorder();
-            }
-            iterator<T> end()
-            {
-                return end_inorder();
-            }
-        };
 
 }
 
